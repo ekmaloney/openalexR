@@ -31,7 +31,7 @@ openalex_api <- function(path){
   }
 
 
-  parsed <- jsonlite::fromJSON(httr::content(resp, "text"), flatten = TRUE)
+  parsed <- jsonlite::fromJSON(httr::content(resp, "text", encoding = "UTF-8"), flatten = TRUE)
 
   return(parsed)
 
