@@ -4,13 +4,7 @@ Version: 0.0.0.9000
 Authors@R: 
     person("Maloney", "Em", , "em.k.maloney@duke.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5576-1080"))
-Description: openalexR is a package of functions to make queries to the OpenAlex 
-API. OpenAlex is an open source resource containing data on academic publications
-as well as information about authors, journals, institutions, and concepts. More 
-information about the project can be found here: https://openalex.org and the data 
-specifically here: https://docs.openalex.org. To access the data, maintainers of 
-OpenAlex created an API, and this R package includes functions to access and make
-queries to the API. 
+Description: openalexR is a package of functions to make queries to the OpenAlex API. OpenAlex is an open source resource containing data on academic publications as well as information about authors, journals, institutions, and concepts. More  information about the project can be found here: https://openalex.org and the data  specifically here: https://docs.openalex.org. To access the data, maintainers of  OpenAlex created an API, and this R package includes functions to access and make queries to the API. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
