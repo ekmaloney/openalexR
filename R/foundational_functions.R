@@ -48,7 +48,7 @@ get_all_data_for_query <- function(base_page_path, number_of_pages){
 
   #make df of the paths
   urls <- data.frame(page_number = seq(from = 1, to = number_of_pages, by = 1)) %>%
-          mutate(url = paste0(base_page_path, "&page=", page_number))
+          dplyr::mutate(url = paste0(base_page_path, "&page=", page_number))
 
 
   #apply function to each row of the df
