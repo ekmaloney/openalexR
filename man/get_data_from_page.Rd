@@ -7,10 +7,10 @@
 get_data_from_page(page_path)
 }
 \arguments{
-\item{page_path}{}
+\item{page_path}{the url for the page of API results}
 }
 \value{
-
+df with results from that page
 }
 \description{
 Convenience function to get the data from each page -- only pulling out the

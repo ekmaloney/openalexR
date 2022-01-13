@@ -31,7 +31,19 @@ openalex_api <- function(path){
   }
 
 
-  parsed <- jsonlite::fromJSON(httr::content(resp, "text", encoding = "UTF-8"), flatten = TRUE)
+  parsed <- jsonlite::fromJSON(httr::content(resp, "text", encoding = "UTF-8"))
+
+  if(stringr::str_detect(path, "author")){
+    if(parsed$meta$count == 0){
+      stop(
+        sprintf(
+          "No records were found in the OpenAlex Database matching that author id."
+        )
+      )
+    }
+  }
+
+
 
   return(parsed)
 
