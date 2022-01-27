@@ -10,6 +10,8 @@
 #' @export
 #'
 #' @examples find_paper(id_type = "doi", id = "https://doi.org/10.7717/peerj.4375")
+#'
+#' id2 = "https://doi.org/10.3233/kes-190418"
 find_paper <- function(id_type = c("open_alex", "doi"),
                        id){
 
@@ -21,4 +23,3 @@ find_paper <- function(id_type = c("open_alex", "doi"),
   paper_info <- openalex_api(path)
 
 }
-

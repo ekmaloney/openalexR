@@ -12,10 +12,16 @@ openalex_api <- function(path){
 
   resp <- httr::GET(path)
 
+  if(resp$status_code == 404){
+    stop(print(httr::content(resp, "text", encoding = "UTF-8")))
+  }
+
   #checking that we are getting JSON
   if (httr::http_type(resp) != "application/json") {
     stop("API did not return json", call. = FALSE)
   }
+
+  parsed <- jsonlite::fromJSON(httr::content(resp, "text", encoding = "UTF-8"))
 
   #indicating to user if there's an issue with the API request
   if (httr::http_error(resp)) {
@@ -30,8 +36,6 @@ openalex_api <- function(path){
     )
   }
 
-
-  parsed <- jsonlite::fromJSON(httr::content(resp, "text", encoding = "UTF-8"))
 
   if(stringr::str_detect(path, "author")){
     if(parsed$meta$count == 0){

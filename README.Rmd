@@ -1,0 +1,64 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# openalexR
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of openalexR is to ...
+
+## Installation
+
+You can install the development version of openalexR from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("ekmaloney/openalexR")
+```
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r example}
+library(openalexR)
+
+#find a paper in the openalex database: 
+
+#Example: "Analysis of the glottal excitation of emotionally styled and stressed speech,"
+#one of my mother's publications when she was an electrical engineer at Georgia Tech
+#I will use the doi to retrieve it: 
+
+paper_info <- find_paper(id_type = "doi", 
+                         id = "https://doi.org/10.1121/1.413664")
+
+str(paper_info)
+
+```
+
+From the paper info, you can also find all papers by an author: 
+
+```{r cars}
+
+mom_oa_id <- paper_info$authorships$author$id[1]
+
+all_papers <- get_authors_papers(id_type = "openalex",
+                                 id = mom_oa_id)
+
+
+head(all_papers)
+```
+
