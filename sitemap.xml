@@ -16,7 +16,13 @@
     <loc>https://ekmaloney.github.io/openalexR/index.html</loc>
   </url>
   <url>
+    <loc>https://ekmaloney.github.io/openalexR/reference/clean_author_info.html</loc>
+  </url>
+  <url>
     <loc>https://ekmaloney.github.io/openalexR/reference/clean_works_result.html</loc>
+  </url>
+  <url>
+    <loc>https://ekmaloney.github.io/openalexR/reference/find_author.html</loc>
   </url>
   <url>
     <loc>https://ekmaloney.github.io/openalexR/reference/find_work.html</loc>
