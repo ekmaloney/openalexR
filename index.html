@@ -55,7 +55,9 @@
 </h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
-<p>The goal of openalexR is to …</p>
+<p>The goal of openalexR is to create an R wrapper for the Open Alex API (<a href="https://openalex.org" class="external-link uri">https://openalex.org</a>) which allows users to query and extract results from the Open Alex database of scholarly output. Open Alex succeeds the Microsoft Academic Graph in maintaining an extensive relational database. The API has 5 endpoints to query: (1) Works (journal &amp; conference papers, books, data, etc); (2) Authors; (3) Venues; (4) Institutions; and (5) Concepts. More information about each of these endpoints can be found here: (<a href="https://docs.openalex.org" class="external-link uri">https://docs.openalex.org</a>).</p>
+<p>The API is completely free, has no rate limits, and is open source. If you prefer, you can also request a snapshot of all of the data to be copied into an amazon s3 bucket (<a href="https://docs.openalex.org/download-snapshot" class="external-link uri">https://docs.openalex.org/download-snapshot</a>).</p>
+<p>openalexR has functions to request data from each of the five endpoints: get_works, get_authors, get_venues, get_institutions, and get_concepts. It also has some wrapper functions for specific needs (get_authors_papers, get_authors_coauthors).</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -65,9 +67,9 @@
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ekmaloney/openalexR"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+<h2 id="eworks">EWorks<a class="anchor" aria-label="anchor" href="#eworks"></a>
 </h2>
-<p>This is a basic example which shows you how to solve a common problem:</p>
+<p>The get_works function takes three main parameters: (1) ID type, one of: doi, open_alex, mag (Microsoft Academic Graph), pmid (Pubmed Identifier), pmcid (Pubmed Central Identifier) (2) Id(s), can either be 1 id or a list of ids. (3) Variable_unnest (optional) - a variable by which you would like to make the dataframe longer (can be: authors, )</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ekmaloney.github.io/openalexR">openalexR</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span>
@@ -86,7 +88,7 @@
 <span class="co">#one of my mother's publications when she was an electrical engineer at Georgia Tech</span>
 <span class="co">#I will use the doi to retrieve it: </span>
 
-<span class="va">paper_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/find_paper.html">find_paper</a></span><span class="op">(</span>id_type <span class="op">=</span> <span class="st">"doi"</span>, 
+<span class="va">paper_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/find_work.html">find_work</a></span><span class="op">(</span>id_type <span class="op">=</span> <span class="st">"doi"</span>, 
                          id <span class="op">=</span> <span class="st">"https://doi.org/10.1121/1.413664"</span>,
                          variable_unnest <span class="op">=</span> <span class="st">"authors"</span><span class="op">)</span>
 
