@@ -19,10 +19,22 @@
     <loc>https://ekmaloney.github.io/openalexR/reference/clean_author_info.html</loc>
   </url>
   <url>
+    <loc>https://ekmaloney.github.io/openalexR/reference/clean_venue_info.html</loc>
+  </url>
+  <url>
     <loc>https://ekmaloney.github.io/openalexR/reference/clean_works_result.html</loc>
   </url>
   <url>
     <loc>https://ekmaloney.github.io/openalexR/reference/find_author.html</loc>
+  </url>
+  <url>
+    <loc>https://ekmaloney.github.io/openalexR/reference/find_concept.html</loc>
+  </url>
+  <url>
+    <loc>https://ekmaloney.github.io/openalexR/reference/find_institution.html</loc>
+  </url>
+  <url>
+    <loc>https://ekmaloney.github.io/openalexR/reference/find_venue.html</loc>
   </url>
   <url>
     <loc>https://ekmaloney.github.io/openalexR/reference/find_work.html</loc>
