@@ -19,5 +19,6 @@ Imports:
     jsonlite,
     purrr,
     tidyr,
-    stringr
+    stringr,
+    tibble
 URL: https://ekmaloney.github.io/openalexR
