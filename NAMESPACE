@@ -2,8 +2,12 @@
 
 export("%>%")
 export(clean_author_info)
+export(clean_venue_info)
 export(clean_works_result)
 export(find_author)
+export(find_concept)
+export(find_institution)
+export(find_venue)
 export(find_work)
 export(get_all_data_for_query)
 export(get_authors_papers)
