@@ -1,5 +1,6 @@
 test_that("Get Authors Papers returns something", {
-  expect_false(is.null(get_authors_papers(id_type = "openalex", id = "A2941293769")))
+  expect_false(is.null(get_authors_papers(id_type = "openalex",
+                                          id = "A2941293769")))
 })
 
 test_that("Get Authors Papers is returning only papers that have that author",{

@@ -6,7 +6,24 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of openalexR is to …
+The goal of openalexR is to create an R wrapper for the Open Alex API
+(<https://openalex.org>) which allows users to query and extract results
+from the Open Alex database of scholarly output. Open Alex succeeds the
+Microsoft Academic Graph in maintaining an extensive relational
+database. The API has 5 endpoints to query: (1) Works (journal &
+conference papers, books, data, etc); (2) Authors; (3) Venues; (4)
+Institutions; and (5) Concepts. More information about each of these
+endpoints can be found here: (<https://docs.openalex.org>).
+
+The API is completely free, has no rate limits, and is open source. If
+you prefer, you can also request a snapshot of all of the data to be
+copied into an amazon s3 bucket
+(<https://docs.openalex.org/download-snapshot>).
+
+openalexR has functions to request data from each of the five endpoints:
+get\_works, get\_authors, get\_venues, get\_institutions, and
+get\_concepts. It also has some wrapper functions for specific needs
+(get\_authors\_papers, get\_authors\_coauthors).
 
 ## Installation
 
@@ -18,9 +35,13 @@ You can install the development version of openalexR from
 devtools::install_github("ekmaloney/openalexR")
 ```
 
-## Example
+## EWorks
 
-This is a basic example which shows you how to solve a common problem:
+The get\_works function takes three main parameters: (1) ID type, one
+of: doi, open\_alex, mag (Microsoft Academic Graph), pmid (Pubmed
+Identifier), pmcid (Pubmed Central Identifier) (2) Id(s), can either be
+1 id or a list of ids. (3) Variable\_unnest (optional) - a variable by
+which you would like to make the dataframe longer (can be: authors, )
 
 ``` r
 library(openalexR)
@@ -40,7 +61,7 @@ library(tidyverse)
 #one of my mother's publications when she was an electrical engineer at Georgia Tech
 #I will use the doi to retrieve it: 
 
-paper_info <- find_paper(id_type = "doi", 
+paper_info <- find_work(id_type = "doi", 
                          id = "https://doi.org/10.1121/1.413664",
                          variable_unnest = "authors")
 
