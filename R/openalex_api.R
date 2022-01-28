@@ -37,7 +37,7 @@ openalex_api <- function(path){
   }
 
 
-  if(stringr::str_detect(path, "author")){
+  if(stringr::str_detect(path, "author.id")){
     if(parsed$meta$count == 0){
       stop(
         sprintf(
