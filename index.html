@@ -55,9 +55,9 @@
 </h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
-<p>The goal of openalexR is to create an R wrapper for the Open Alex API (<a href="https://openalex.org" class="external-link uri">https://openalex.org</a>) which allows users to query and extract results from the Open Alex database of scholarly output. Open Alex succeeds the Microsoft Academic Graph in maintaining an extensive relational database. The API has 5 endpoints to query: (1) Works (journal &amp; conference papers, books, data, etc); (2) Authors; (3) Venues; (4) Institutions; and (5) Concepts. More information about each of these endpoints can be found here: (<a href="https://docs.openalex.org" class="external-link uri">https://docs.openalex.org</a>).</p>
-<p>The API is completely free, has no rate limits, and is open source. If you prefer, you can also request a snapshot of all of the data to be copied into an amazon s3 bucket (<a href="https://docs.openalex.org/download-snapshot" class="external-link uri">https://docs.openalex.org/download-snapshot</a>).</p>
-<p>openalexR has functions to request data from each of the five endpoints: get_works, get_authors, get_venues, get_institutions, and get_concepts. It also has some wrapper functions for specific needs (get_authors_papers, get_authors_coauthors).</p>
+<p>The goal of openalexR is to create an R wrapper for the Open Alex API (<a href="https://openalex.org" class="external-link uri">https://openalex.org</a>) which allows users to query and extract results from the Open Alex database of academic research output. Open Alex succeeds the Microsoft Academic Graph in maintaining an extensive relational database. The API has 5 endpoints to query: (1) Works (journal &amp; conference papers, books, data, etc); (2) Authors; (3) Venues; (4) Institutions; and (5) Concepts. More information about each of these endpoints can be found here: (<a href="https://docs.openalex.org" class="external-link uri">https://docs.openalex.org</a>).</p>
+<p>The API is completely free, open source, and has no rate limits. If you prefer, you can also request a snapshot of all of the data to be copied into an amazon s3 bucket (<a href="https://docs.openalex.org/download-snapshot" class="external-link uri">https://docs.openalex.org/download-snapshot</a>).</p>
+<p>openalexR has functions to request data from each of the five endpoints: get_works, get_authors, get_venues, get_institutions, and get_concepts. It also has some wrapper functions for specific needs (get_authors_papers, get_coauthors).</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -67,9 +67,10 @@
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ekmaloney/openalexR"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="eworks">EWorks<a class="anchor" aria-label="anchor" href="#eworks"></a>
+<h2 id="find-works">Find Works<a class="anchor" aria-label="anchor" href="#find-works"></a>
 </h2>
-<p>The get_works function takes three main parameters: (1) ID type, one of: doi, open_alex, mag (Microsoft Academic Graph), pmid (Pubmed Identifier), pmcid (Pubmed Central Identifier) (2) Id(s), can either be 1 id or a list of ids. (3) Variable_unnest (optional) - a variable by which you would like to make the dataframe longer (can be: authors, )</p>
+<p>The find_works function takes three main parameters: (1) ID type, one of: doi, open_alex, mag (Microsoft Academic Graph), pmid (Pubmed Identifier), pmcid (Pubmed Central Identifier) (2) Id(s), can either be 1 id or a list of ids. (3) Variable_unnest (optional) - a variable by which you would like to make the dataframe longer (can be: authorships, concepts, referenced_works, related_works, and citation_counts_year)</p>
+<p>For example, if I wanted to look up the paper “Analysis of the glottal excitation of emotionally styled and stressed speech” by Kathleen E. Cummings (my mom!) and Mark A. Clements, I can use the doi (<a href="https://doi.org/10.1121/1.413664" class="external-link uri">https://doi.org/10.1121/1.413664</a>) to do so as shown below:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ekmaloney.github.io/openalexR">openalexR</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span>
@@ -82,19 +83,13 @@
 <span class="co">#&gt; x dplyr::filter() masks stats::filter()</span>
 <span class="co">#&gt; x dplyr::lag()    masks stats::lag()</span>
 
-<span class="co">#find a paper in the openalex database: </span>
-
-<span class="co">#Example: "Analysis of the glottal excitation of emotionally styled and stressed speech,"</span>
-<span class="co">#one of my mother's publications when she was an electrical engineer at Georgia Tech</span>
-<span class="co">#I will use the doi to retrieve it: </span>
-
 <span class="va">paper_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/find_work.html">find_work</a></span><span class="op">(</span>id_type <span class="op">=</span> <span class="st">"doi"</span>, 
                          id <span class="op">=</span> <span class="st">"https://doi.org/10.1121/1.413664"</span>,
                          variable_unnest <span class="op">=</span> <span class="st">"authors"</span><span class="op">)</span>
 
 <span class="fu">glimpse</span><span class="op">(</span><span class="va">paper_info</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 2</span>
-<span class="co">#&gt; Columns: 17</span>
+<span class="co">#&gt; Columns: 19</span>
 <span class="co">#&gt; $ id                   &lt;chr&gt; "https://openalex.org/W2062207950", "https://open…</span>
 <span class="co">#&gt; $ title                &lt;chr&gt; "Analysis of the glottal excitation of emotionall…</span>
 <span class="co">#&gt; $ publication_date     &lt;chr&gt; "1995-07-01", "1995-07-01"</span>
@@ -106,44 +101,130 @@
 <span class="co">#&gt; $ works_type           &lt;chr&gt; "journal-article", "journal-article"</span>
 <span class="co">#&gt; $ open_access          &lt;lgl&gt; FALSE, FALSE</span>
 <span class="co">#&gt; $ open_access_status   &lt;chr&gt; "closed", "closed"</span>
-<span class="co">#&gt; $ authors              &lt;tibble[,3]&gt; &lt;tbl_df[2 x 3]&gt;</span>
+<span class="co">#&gt; $ authors_id           &lt;chr&gt; "https://openalex.org/A2109682146", "https://open…</span>
+<span class="co">#&gt; $ authors_name         &lt;chr&gt; "K.E. Cummings", "Mark A. Clements"</span>
+<span class="co">#&gt; $ authors_orcid        &lt;lgl&gt; NA, NA</span>
 <span class="co">#&gt; $ citation_count       &lt;int&gt; 97, 97</span>
 <span class="co">#&gt; $ concepts             &lt;list&gt; [&lt;data.frame[7 x 5]&gt;], [&lt;data.frame[7 x 5]&gt;]</span>
 <span class="co">#&gt; $ referenced_works     &lt;list&gt; [], []</span>
 <span class="co">#&gt; $ related_works        &lt;list&gt; &lt;"https://openalex.org/W2109138290", "https://ope…</span>
 <span class="co">#&gt; $ citation_counts_year &lt;list&gt; [&lt;data.frame[10 x 2]&gt;], [&lt;data.frame[10 x 2]&gt;]</span></code></pre></div>
-<p>From the paper info, you can also find all papers by an author:</p>
+<p>This function returns a tibble with some nested columns. I decided to unnest the authorships column, so I can extract the openalex id for Kathleen E. Cummings to use to retrieve all of her published work (get_authors_papers) and her coauthorship network (get_coauthors).</p>
+<p>The get_authors_papers() function works similarly to find_work - you need to indicate what type of id you are supplying and the id itself. Here I use the openalex id I got from the previous result.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mom_oa_id</span> <span class="op">&lt;-</span> <span class="va">paper_info</span><span class="op">$</span><span class="va">authors</span><span class="op">$</span><span class="va">author_id</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>
+<code class="sourceCode R"><span class="co">#get the openalex id</span>
+<span class="va">mom_oa_id</span> <span class="op">&lt;-</span> <span class="va">paper_info</span><span class="op">$</span><span class="va">authors_id</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>
 
+<span class="co">#get all papers she published </span>
 <span class="va">all_papers</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_authors_papers.html">get_authors_papers</a></span><span class="op">(</span>id_type <span class="op">=</span> <span class="st">"openalex"</span>,
                                  id <span class="op">=</span> <span class="va">mom_oa_id</span><span class="op">)</span>
 
 
 <span class="fu">glimpse</span><span class="op">(</span><span class="va">all_papers</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 10</span>
-<span class="co">#&gt; Columns: 21</span>
-<span class="co">#&gt; $ id                      &lt;chr&gt; "https://openalex.org/W2050783745", "https://o…</span>
-<span class="co">#&gt; $ display_name            &lt;chr&gt; "Analysis of the glottal excitation of intoxic…</span>
-<span class="co">#&gt; $ publication_date        &lt;chr&gt; "1996-04-01", "1995-07-01", "1995-05-09", "199…</span>
-<span class="co">#&gt; $ relevance_score         &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA</span>
-<span class="co">#&gt; $ host_venue              &lt;df[,10]&gt; &lt;data.frame[10 x 10]&gt;</span>
-<span class="co">#&gt; $ authorships             &lt;list&gt; [&lt;data.frame[3 x 4]&gt;], [&lt;data.frame[2 x 4]&gt;], …</span>
-<span class="co">#&gt; $ concepts                &lt;list&gt; [&lt;data.frame[8 x 5]&gt;], [&lt;data.frame[7 x 5]…</span>
-<span class="co">#&gt; $ alternate_host_venues   &lt;list&gt; [], [], [], [], [], [], [], [], [], []</span>
-<span class="co">#&gt; $ open_access             &lt;df[,3]&gt; &lt;data.frame[10 x 3]&gt;</span>
-<span class="co">#&gt; $ cited_by_count          &lt;int&gt; 0, 97, 3, 0, 2, 16, 13, 0, 33, 7</span>
-<span class="co">#&gt; $ ids                     &lt;df[,4]&gt; &lt;data.frame[10 x 4]&gt;</span>
-<span class="co">#&gt; $ publication_year        &lt;int&gt; 1996, 1995, 1995, 1994, 1994, 1993, 1992, 199…</span>
-<span class="co">#&gt; $ cited_by_api_url        &lt;chr&gt; "https://api.openalex.org/works?filter=cites:…</span>
-<span class="co">#&gt; $ doi                     &lt;chr&gt; "https://doi.org/10.1121/1.415167", "https://…</span>
-<span class="co">#&gt; $ type                    &lt;chr&gt; "journal-article", "journal-article", "proc…</span>
-<span class="co">#&gt; $ is_paratext             &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALS…</span>
-<span class="co">#&gt; $ is_retracted            &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F…</span>
-<span class="co">#&gt; $ referenced_works        &lt;list&gt; &lt;&gt;, &lt;&gt;, &lt;"https://openalex.org/W2051535326", "…</span>
-<span class="co">#&gt; $ related_works           &lt;list&gt; &lt;"https://openalex.org/W1994886694", "https://…</span>
-<span class="co">#&gt; $ biblio                  &lt;df[,4]&gt; &lt;data.frame[10 x 4]&gt;</span>
-<span class="co">#&gt; $ abstract_inverted_index &lt;df[,538]&gt; &lt;data.frame[10 x 538]&gt;</span></code></pre></div>
+<span class="co">#&gt; Columns: 29</span>
+<span class="co">#&gt; $ id                    &lt;chr&gt; "https://openalex.org/W2050783745", "https://ope…</span>
+<span class="co">#&gt; $ doi                   &lt;chr&gt; "https://doi.org/10.1121/1.415167", "https://doi…</span>
+<span class="co">#&gt; $ mag                   &lt;chr&gt; "2050783745", "2062207950", "1590551706", "20587…</span>
+<span class="co">#&gt; $ openalex              &lt;chr&gt; "https://openalex.org/W2050783745", "https://ope…</span>
+<span class="co">#&gt; $ pmid                  &lt;chr&gt; NA, "https://pubmed.ncbi.nlm.nih.gov/7608410", N…</span>
+<span class="co">#&gt; $ title                 &lt;chr&gt; "Analysis of the glottal excitation of intoxicat…</span>
+<span class="co">#&gt; $ publication_date      &lt;chr&gt; "1996-04-01", "1995-07-01", "1995-05-09", "1994-…</span>
+<span class="co">#&gt; $ relevance_score       &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA</span>
+<span class="co">#&gt; $ host_venue_id         &lt;chr&gt; "https://openalex.org/V11296630", "https://opena…</span>
+<span class="co">#&gt; $ host_venue_name       &lt;chr&gt; "Journal of the Acoustical Society of America", …</span>
+<span class="co">#&gt; $ host_venue_publisher  &lt;chr&gt; "Acoustical Society of America", "Acoustical Soc…</span>
+<span class="co">#&gt; $ host_venue_issn       &lt;list&gt; &lt;"1520-8524", "0001-4966", "1520-9024"&gt;, &lt;"1520-…</span>
+<span class="co">#&gt; $ host_venue_iss_l      &lt;chr&gt; "0001-4966", "0001-4966", NA, "0001-4966", "000…</span>
+<span class="co">#&gt; $ host_venue_type       &lt;chr&gt; "publisher", "publisher", "publisher", "publishe…</span>
+<span class="co">#&gt; $ host_venue_url        &lt;chr&gt; "https://doi.org/10.1121/1.415167", "https://doi…</span>
+<span class="co">#&gt; $ host_venue_oa         &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,…</span>
+<span class="co">#&gt; $ host_venue_version    &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA</span>
+<span class="co">#&gt; $ host_venue_license    &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA</span>
+<span class="co">#&gt; $ authorships           &lt;list&gt; [&lt;data.frame[3 x 4]&gt;], [&lt;data.frame[2 x 4]&gt;], [&lt;…</span>
+<span class="co">#&gt; $ concepts              &lt;list&gt; [&lt;data.frame[8 x 5]&gt;], [&lt;data.frame[7 x 5]&gt;], [&lt;…</span>
+<span class="co">#&gt; $ alternate_host_venues &lt;list&gt; [], [], [], [], [], [], [], [], [], []</span>
+<span class="co">#&gt; $ cited_by_count        &lt;int&gt; 0, 97, 3, 0, 2, 16, 13, 0, 33, 7</span>
+<span class="co">#&gt; $ publication_year      &lt;int&gt; 1996, 1995, 1995, 1994, 1994, 1993, 1992, 1991, …</span>
+<span class="co">#&gt; $ cited_by_url          &lt;chr&gt; "https://api.openalex.org/works?filter=cites:W2…</span>
+<span class="co">#&gt; $ type                  &lt;chr&gt; "journal-article", "journal-article", "proceedi…</span>
+<span class="co">#&gt; $ paratext              &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE…</span>
+<span class="co">#&gt; $ retracted             &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,…</span>
+<span class="co">#&gt; $ referenced_works      &lt;list&gt; &lt;&gt;, &lt;&gt;, &lt;"https://openalex.org/W2051535326", "ht…</span>
+<span class="co">#&gt; $ related_works         &lt;list&gt; &lt;"https://openalex.org/W1994886694", "https://op…</span></code></pre></div>
+<p>You can explore these results – here I look at the distribution of concepts across her published work.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">all_papers</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> 
+    <span class="fu">unnest</span><span class="op">(</span><span class="va">concepts</span>, names_sep <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> 
+    <span class="fu">group_by</span><span class="op">(</span><span class="va">concepts_display_name</span>, <span class="va">concepts_level</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> 
+    <span class="fu">summarise</span><span class="op">(</span>count <span class="op">=</span> <span class="fu">n</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> 
+    <span class="fu">ggplot</span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/reorder.factor.html" class="external-link">reorder</a></span><span class="op">(</span><span class="va">concepts_display_name</span>, <span class="va">count</span><span class="op">)</span>, y <span class="op">=</span> <span class="va">count</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+    <span class="fu">geom_col</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">coord_flip</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">concepts_level</span>, scales <span class="op">=</span> <span class="st">"free_y"</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Concepts in published papers"</span>,
+                           subtitle <span class="op">=</span> <span class="st">"by concept specificity level (lower is broader)"</span>,
+                           x <span class="op">=</span> <span class="st">"concept name"</span>, y <span class="op">=</span> <span class="st">"number of papers"</span><span class="op">)</span>
+<span class="co">#&gt; `summarise()` has grouped output by 'concepts_display_name'. You can override</span>
+<span class="co">#&gt; using the `.groups` argument.</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-2-1.png" width="100%"></p>
+<p>Finally, you can also use the get_coauthors() function to collect the coauthorship network of the specified author of choice.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">kate_direct_coauthors</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_coauthors.html">get_coauthors</a></span><span class="op">(</span>id_type <span class="op">=</span> <span class="st">"openalex"</span>,
+                                       id <span class="op">=</span> <span class="va">mom_oa_id</span><span class="op">)</span>
+<span class="co">#&gt; Joining, by = "ego_author"</span>
+
+<span class="va">coauthors_tibble</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_coauthors.html">get_coauthors</a></span><span class="op">(</span>id_type <span class="op">=</span> <span class="st">"openalex"</span>, 
+                                  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">kate_direct_coauthors</span><span class="op">$</span><span class="va">alter_author</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; Joining, by = "ego_author"</span>
+
+<span class="va">only_ego_net</span> <span class="op">&lt;-</span> <span class="va">coauthors_tibble</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">alter_author</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">kate_direct_coauthors</span><span class="op">$</span><span class="va">alter_author</span><span class="op">)</span>
+
+<span class="va">all_connections</span> <span class="op">&lt;-</span> <span class="fu">bind_rows</span><span class="op">(</span><span class="va">kate_direct_coauthors</span>, <span class="va">only_ego_net</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> 
+                   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>ego_first <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">ego_author_name</span>, <span class="va">alter_author_name</span>, sep <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span>,
+                          alter_first <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">alter_author_name</span>, <span class="va">alter_author_name</span>, sep <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> 
+                   <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="va">ego_first</span><span class="op">:</span><span class="va">alter_first</span>, 
+                                names_to <span class="op">=</span> <span class="st">"order"</span>, 
+                                values_to <span class="op">=</span> <span class="st">"tie"</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> 
+                  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">paper_id</span>, <span class="va">tie</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> 
+                  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> <span class="fu">separate</span><span class="op">(</span><span class="va">tie</span>, into <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ego_author"</span>,
+                                                               <span class="st">"alter_author"</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> 
+                  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ego_author</span> <span class="op">!=</span> <span class="va">alter_author</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> 
+                  <span class="fu">group_by</span><span class="op">(</span><span class="va">ego_author</span>, <span class="va">alter_author</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> 
+                  <span class="fu">summarise</span><span class="op">(</span>weight <span class="op">=</span> <span class="fu">n</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; `summarise()` has grouped output by 'ego_author'. You can override using the</span>
+<span class="co">#&gt; `.groups` argument.</span>
+
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://igraph.org" class="external-link">igraph</a></span><span class="op">)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: 'igraph'</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; The following objects are masked from 'package:dplyr':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     as_data_frame, groups, union</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; The following objects are masked from 'package:purrr':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     compose, simplify</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; The following object is masked from 'package:tidyr':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     crossing</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; The following object is masked from 'package:tibble':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     as_data_frame</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     decompose, spectrum</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; The following object is masked from 'package:base':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     union</span>
+
+<span class="va">network</span> <span class="op">&lt;-</span> <span class="fu">graph_from_data_frame</span><span class="op">(</span><span class="va">all_connections</span>, directed <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">network</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-3-1.png" width="100%"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="license">

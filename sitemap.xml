@@ -25,6 +25,9 @@
     <loc>https://ekmaloney.github.io/openalexR/reference/clean_works_result.html</loc>
   </url>
   <url>
+    <loc>https://ekmaloney.github.io/openalexR/reference/construct_links.html</loc>
+  </url>
+  <url>
     <loc>https://ekmaloney.github.io/openalexR/reference/find_author.html</loc>
   </url>
   <url>
@@ -46,7 +49,13 @@
     <loc>https://ekmaloney.github.io/openalexR/reference/get_authors_papers.html</loc>
   </url>
   <url>
+    <loc>https://ekmaloney.github.io/openalexR/reference/get_coauthors.html</loc>
+  </url>
+  <url>
     <loc>https://ekmaloney.github.io/openalexR/reference/get_data_from_page.html</loc>
+  </url>
+  <url>
+    <loc>https://ekmaloney.github.io/openalexR/reference/get_links_for_each_page.html</loc>
   </url>
   <url>
     <loc>https://ekmaloney.github.io/openalexR/reference/get_number_of_pages.html</loc>
