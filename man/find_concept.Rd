@@ -18,3 +18,6 @@ find_concept(
 \description{
 Find Concept
 }
+\examples{
+find_concept(id_type = "openalex", id = "C2778407487")
+}

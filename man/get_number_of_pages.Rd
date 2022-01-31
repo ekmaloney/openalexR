@@ -2,19 +2,16 @@
 % Please edit documentation in R/foundational_functions.R
 \name{get_number_of_pages}
 \alias{get_number_of_pages}
-\title{Get number of pages of results}
+\title{Get Number of Pages}
 \usage{
-get_number_of_pages(page1_path)
+get_number_of_pages(author_papers)
 }
 \arguments{
-\item{page1_path}{the url of the first page of results}
+\item{author_papers}{}
 }
 \value{
-the total number of pages needed to get all of the results
+
 }
 \description{
-Get number of pages of results
-}
-\examples{
-get_number_of_pages("https://api.openalex.org/concepts?filter=level:1")
+Get Number of Pages
 }

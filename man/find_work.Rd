@@ -5,7 +5,7 @@
 \title{Find Work}
 \usage{
 find_work(
-  id_type = c("open_alex", "doi", "mag", "pmid", "pmcid"),
+  id_type = c("openalex", "doi", "mag", "pmid", "pmcid"),
   id,
   variable_unnest = NULL
 )

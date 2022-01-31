@@ -6,7 +6,7 @@
 #' @return
 #' @export
 #'
-#' @examples
+#' @examples find_concept(id_type = "openalex", id = "C2778407487")
 find_concept <- function(id_type = c("openalex",
                                      "wikidata",
                                      "mag",

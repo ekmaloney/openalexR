@@ -1,17 +1,56 @@
-#' Get number of pages of results
+#' Get links for each page
 #'
 #' @param page1_path the url of the first page of results
 #'
-#' @return the total number of pages needed to get all of the results
+#' @return the links to request
 #' @export
 #'
-#' @examples get_number_of_pages("https://api.openalex.org/concepts?filter=level:1")
-get_number_of_pages <- function(page1_path){
-  author_papers <- openalex_api(page1_path)
+#' @examples
+get_links_for_each_page <- function(page1_path){
+  author_papers <- purrr::map(page1_path, openalex_api)
 
-  num_pages <- ceiling(author_papers$meta$count/25)
+  n_pages <- purrr::map(author_papers, get_number_of_pages)
 
-  return(num_pages)
+  all_links <- purrr::map2(page1_path, n_pages, construct_links)
+  all_links <- unlist(all_links)
+
+  return(all_links)
+}
+
+
+#' Construct Links
+#'
+#' @param path
+#' @param n_page
+#'
+#' @return
+#' @export
+#'
+#' @examples
+construct_links <- function(path, n_page){
+
+  links <- tibble::tibble(path = path,
+                  n_page = seq(from = 1, to = n_page, by = 1),
+                  url = paste0(path, "&page=", n_page))
+
+
+  return(links$url)
+}
+
+
+#' Get Number of Pages
+#'
+#' @param author_papers
+#'
+#' @return
+#' @export
+#'
+#' @examples
+get_number_of_pages <- function(author_papers){
+
+  n_page <- ceiling(author_papers$meta$count/25)
+
+  return(n_page)
 }
 
 #' Get Data from Page

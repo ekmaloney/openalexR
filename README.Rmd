@@ -18,11 +18,11 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of openalexR is to create an R wrapper for the Open Alex API (https://openalex.org) which allows users to query and extract results from the Open Alex database of scholarly output. Open Alex succeeds the Microsoft Academic Graph in maintaining an extensive relational database. The API has 5 endpoints to query: (1) Works (journal & conference papers, books, data, etc); (2) Authors; (3) Venues; (4) Institutions; and (5) Concepts. More information about each of these endpoints can be found here: (https://docs.openalex.org). 
+The goal of openalexR is to create an R wrapper for the Open Alex API (https://openalex.org) which allows users to query and extract results from the Open Alex database of academic research output. Open Alex succeeds the Microsoft Academic Graph in maintaining an extensive relational database. The API has 5 endpoints to query: (1) Works (journal & conference papers, books, data, etc); (2) Authors; (3) Venues; (4) Institutions; and (5) Concepts. More information about each of these endpoints can be found here: (https://docs.openalex.org). 
 
-The API is completely free, has no rate limits, and is open source. If you prefer, you can also request a snapshot of all of the data to be copied into an amazon s3 bucket (https://docs.openalex.org/download-snapshot). 
+The API is completely free, open source, and has no rate limits. If you prefer, you can also request a snapshot of all of the data to be copied into an amazon s3 bucket (https://docs.openalex.org/download-snapshot). 
 
-openalexR has functions to request data from each of the five endpoints: get_works, get_authors, get_venues, get_institutions, and get_concepts. It also has some wrapper functions for specific needs (get_authors_papers, get_authors_coauthors). 
+openalexR has functions to request data from each of the five endpoints: get_works, get_authors, get_venues, get_institutions, and get_concepts. It also has some wrapper functions for specific needs (get_authors_papers, get_coauthors). 
 
 ## Installation
 
@@ -33,22 +33,18 @@ You can install the development version of openalexR from [GitHub](https://githu
 devtools::install_github("ekmaloney/openalexR")
 ```
 
-## EWorks 
+## Find Works
 
-The get_works function takes three main parameters: 
+The find_works function takes three main parameters: 
 (1) ID type, one of: doi, open_alex, mag (Microsoft Academic Graph), pmid (Pubmed Identifier), pmcid (Pubmed Central Identifier)
 (2) Id(s), can either be 1 id or a list of ids. 
-(3) Variable_unnest (optional) - a variable by which you would like to make the dataframe longer (can be: authors, )
+(3) Variable_unnest (optional) - a variable by which you would like to make the dataframe longer (can be: authorships, concepts, referenced_works, related_works, and citation_counts_year)
+
+For example, if I wanted to look up the paper "Analysis of the glottal excitation of emotionally styled and stressed speech" by Kathleen E. Cummings (my mom!) and Mark A. Clements, I can use the doi (https://doi.org/10.1121/1.413664) to do so as shown below: 
 
 ```{r example}
 library(openalexR)
 library(tidyverse)
-
-#find a paper in the openalex database: 
-
-#Example: "Analysis of the glottal excitation of emotionally styled and stressed speech,"
-#one of my mother's publications when she was an electrical engineer at Georgia Tech
-#I will use the doi to retrieve it: 
 
 paper_info <- find_work(id_type = "doi", 
                          id = "https://doi.org/10.1121/1.413664",
@@ -58,16 +54,72 @@ glimpse(paper_info)
 
 ```
 
-From the paper info, you can also find all papers by an author: 
+This function returns a tibble with some nested columns. I decided to unnest the authorships column, so I can extract the openalex id for Kathleen E. Cummings to use to retrieve all of her published work (get_authors_papers) and her coauthorship network (get_coauthors). 
 
-```{r cars}
 
-mom_oa_id <- paper_info$authors$author_id[1]
+The get_authors_papers() function works similarly to find_work - you need to indicate what type of id you are supplying and the id itself. Here I use the openalex id I got from the previous result. 
 
+```{r all papers}
+
+#get the openalex id
+mom_oa_id <- paper_info$authors_id[1]
+
+#get all papers she published 
 all_papers <- get_authors_papers(id_type = "openalex",
                                  id = mom_oa_id)
 
 
 glimpse(all_papers)
+```
+
+You can explore these results -- here I look at the distribution of concepts across her published work. 
+
+```{r}
+
+all_papers %>% 
+    unnest(concepts, names_sep = "_") %>% 
+    group_by(concepts_display_name, concepts_level) %>% 
+    summarise(count = n()) %>% 
+    ggplot(mapping = aes(x = reorder(concepts_display_name, count), y = count)) + 
+    geom_col() + coord_flip() + facet_wrap(~concepts_level, scales = "free_y") +
+    theme_minimal() + labs(title = "Concepts in published papers",
+                           subtitle = "by concept specificity level (lower is broader)",
+                           x = "concept name", y = "number of papers")
+
+
+
+
+```
+
+Finally, you can also use the get_coauthors() function to collect the coauthorship network of the specified author of choice. 
+
+```{r}
+kate_direct_coauthors <- get_coauthors(id_type = "openalex",
+                                       id = mom_oa_id)
+
+coauthors_tibble <- get_coauthors(id_type = "openalex", 
+                                  id = unique(kate_direct_coauthors$alter_author))
+
+only_ego_net <- coauthors_tibble %>% filter(alter_author %in% kate_direct_coauthors$alter_author)
+
+all_connections <- bind_rows(kate_direct_coauthors, only_ego_net) %>% 
+                   dplyr::mutate(ego_first = paste(ego_author_name, alter_author_name, sep = "_"),
+                          alter_first = paste(alter_author_name, alter_author_name, sep = "_")) %>% 
+                   tidyr::pivot_longer(ego_first:alter_first, 
+                                names_to = "order", 
+                                values_to = "tie") %>% 
+                  dplyr::select(paper_id, tie) %>% 
+                  dplyr::distinct() %>% separate(tie, into = c("ego_author",
+                                                               "alter_author"), sep = "_") %>% 
+                  filter(ego_author != alter_author) %>% 
+                  group_by(ego_author, alter_author) %>% 
+                  summarise(weight = n())
+
+library(igraph)
+
+network <- graph_from_data_frame(all_connections, directed = FALSE)
+
+plot(network)
+
 ```
 
